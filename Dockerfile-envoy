@@ -1,0 +1,16 @@
+FROM envoyproxy/envoy-alpine:v1.14.1
+
+# Create user / group
+RUN addgroup -g 1000 app && \
+    adduser app -D app -u 1000 -G app
+
+
+# RUN AS A NON PRIVILEGED USER
+USER 1000:1000
+
+
+
+# Expose ports 8070 (app) / 9100 (admin)
+EXPOSE 9900 8094
+
+CMD envoy -c /etc/envoy/envoy.yaml --service-cluster grpc-envoy

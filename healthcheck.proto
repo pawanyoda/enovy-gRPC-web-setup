@@ -1,0 +1,23 @@
+
+
+syntax = "proto3";
+
+package healthcheck;
+
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc HealthCheck (HealthcheckRequest) returns (HealthcheckReply) {}  
+  
+}
+
+// The request message containing the user's name.
+message HealthcheckRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HealthcheckReply {
+  string message = 1;
+}

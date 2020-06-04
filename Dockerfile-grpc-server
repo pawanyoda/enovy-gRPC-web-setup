@@ -1,0 +1,30 @@
+FROM python:3.7
+
+# Create user / group
+# RUN addgroup -g 1000 app && \
+#     adduser app -D app -u 1000 -G app
+
+RUN addgroup --gid 1000 app
+RUN adduser --home /app --disabled-password --gecos '' --uid 1000 --gid 1000 app
+
+RUN apt-get update -y
+
+RUN python -m pip install grpcio grpcio-tools protobuf grpcio-reflection
+
+COPY ./ /app/
+
+WORKDIR /app
+
+
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. healthcheck.proto
+
+# RUN AS A NON PRIVILEGED USER
+USER 1000:1000
+
+# Expose ports 50052 (app)
+EXPOSE 50052
+
+
+CMD ["python", "healthcheck_server.py", "> /dev/null 2>&1"]
+
+

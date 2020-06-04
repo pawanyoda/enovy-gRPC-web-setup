@@ -1,0 +1,50 @@
+
+version: "3.8"
+services:
+
+
+
+  envoy:
+    build:
+      context: .
+      dockerfile: Dockerfile-envoy
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+    networks:
+      envoy-grpc-demo:
+        aliases:
+          - grpc-envoy
+    expose:
+      - "8094"
+      - "9900"
+    ports:
+      - "8094:8094"
+      - "9900:9900"
+
+  grpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile-grpc-server
+    networks:
+      envoy-grpc-demo:
+        aliases:
+          - grpc-demo-server
+    expose:
+      - "50052"
+
+  grpc-client:
+    build:
+      context: .
+      dockerfile: Dockerfile-grpc-client
+    networks:
+      - envoy-grpc-demo
+    expose:
+      - "8001"
+    ports:
+      - "8001:8001"
+
+networks:
+  envoy-grpc-demo: {}
+
+
+

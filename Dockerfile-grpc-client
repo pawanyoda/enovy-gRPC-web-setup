@@ -1,0 +1,15 @@
+FROM node:10-alpine
+
+COPY ./ /app/
+
+WORKDIR /app
+
+RUN npm install
+RUN npm run build
+
+# RUN AS A NON PRIVILEGED USER
+USER 1000:1000
+
+# Expose ports 8001 (app)
+EXPOSE 8001
+CMD npm run start
